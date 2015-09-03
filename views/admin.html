@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link href="/libs/bootstrap/dist/css/bootstrap.min.css" , rel="stylesheet"/>
+    <link rel="stylesheet" href="stylesheets/style.css"/>
+    <script src="/libs/jquery/dist/jquery.min.js"></script>
+    <script src="/libs/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="javascripts/md5.min.js"></script>
+    <script src="javascripts/velocity.js"></script>
+    <script src="javascripts/main.js"></script>
+</head>
+<body>
+<div id="msg"></div>
+<div class="content">
+    <div class="container">
+        <div class="row">
+            <div class="page-header">
+                <h1><%=title %>
+                    <small> <%=subtitle %></small>
+                </h1>
+                <form action="/user/logout" method="get">
+                    <button id="logout" class="btn btn-danger pull-right col-sm-1">注销</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div id="admin-nav">
+            <section class="col-md-3">
+                <div class="list-group">
+                    <a href="#" class="list-group-item active">
+                        <h4 class="list-group-item-heading">社团管理</h4>
+                    </a>
+                    <a href="#" id="addUser" class="list-group-item">
+                        <h4 class="list-group-item-heading">添加社团</h4>
+                    </a>
+                    <a href="#" id="userList" class="list-group-item">
+                        <h4 class="list-group-item-heading">社团列表</h4>
+                    </a>
+                    <a href="#" id="changeUserInfo" class="list-group-item">
+                        <h4 class="list-group-item-heading">社团信息</h4>
+                    </a>
+                </div>
+                <div class="list-group">
+                    <a href="#" class="list-group-item active">
+                        <h4 class="list-group-item-heading">
+                            申请审核
+                        </h4>
+                    </a>
+                    <a href="#" id="non-checked" class="list-group-item">
+                        <h4 class="list-group-item-heading">未审核<span class="badge pull-right">11</span></h4>
+                    </a>
+                    <a href="#" id="checked" class="list-group-item">
+                        <h4 class="list-group-item-heading">已审核</h4>
+                    </a>
+                </div>
+                <div class="list-group">
+                    <a href="#" class="list-group-item active">
+                        <h4 class="list-group-item-heading">
+                            活动场所管理
+                        </h4>
+                    </a>
+                    <a href="#" id="open-time" class="list-group-item">
+                        <h4 class="list-group-item-heading">时间管理</h4>
+                    </a>
+                    <a href="#" id="open-place" class="list-group-item">
+                        <h4 class="list-group-item-heading">地点管理</h4>
+                    </a>
+                </div>
+
+            </section>
+        </div>
+        <div id="admin-main">
+            <section class="col-md-9 show">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label for="username" class="col-sm-2 control-label">用户名<span class="require">*</span></label>
+
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="username" autocomplete="off"
+                                   placeholder="请输入用户名">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="password" class="col-sm-2 control-label">密&nbsp;&nbsp;&nbsp;码<span
+                                class="require">*</span></label>
+
+                        <div class="col-sm-10">
+                            <input type="password" class="form-control" id="password"
+                                   placeholder="请输入密码">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="organize" class="col-sm-2 control-label">社团名<span class="require">*</span></label>
+
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="organize" autocomplete="off"
+                                   placeholder="请输入社团名">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone" class="col-sm-2 control-label">联系人电话<span class="require">*</span></label>
+
+                        <div class="col-sm-10">
+                            <input type="number" class="form-control" id="phone" autocomplete="off"
+                                   placeholder="请输入联系人电话">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button type="submit" id="addUser-btn" class="btn btn-default">添加</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="col-md-9">
+                <table class="table table-striped table-hover">
+                    <thead>
+                    <tr>
+                        <td>序号</td>
+                        <td>用户名</td>
+                        <td>社团名称</td>
+                        <td>操作</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </section>
+            <section class="col-md-9">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label for="change-name" class="col-sm-2 control-label">用户名<span
+                                class="require">*</span></label>
+
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="change-name"
+                                   placeholder="请输入用户名">
+                        </div>
+                        <button id="getUser" type="submit" class="btn btn-primary col-sm-2">确认</button>
+                    </div>
+                    <hr/>
+                    <div id="change-info">
+                        <div class="form-group">
+                            <label for="change-pwd" class="col-sm-2 control-label">密&nbsp;&nbsp;&nbsp;码<span
+                                    class="require">*</span></label>
+
+                            <div class="col-sm-10">
+                                <input type="password" class="form-control" id="change-pwd"
+                                       placeholder="请输入密码">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="change-organize" class="col-sm-2 control-label">社&nbsp;&nbsp;&nbsp;团<span
+                                    class="require">*</span></label>
+
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="change-organize"
+                                       placeholder="请输入社团名称">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="change-phone" class="col-sm-2 control-label">电&nbsp;&nbsp;&nbsp;话<span
+                                    class="require">*</span></label>
+
+                            <div class="col-sm-10">
+                                <input type="number" class="form-control" id="change-phone"
+                                       placeholder="请输入电话号码">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="change-applies" class="col-sm-2 control-label">剩余申请数<span
+                                    class="require">*</span></label>
+
+                            <div class="col-sm-10">
+                                <input type="number" class="form-control" id="change-applies"
+                                       placeholder="请输入剩余申请数">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button id="change-btn" type="submit" class="btn btn-default">提交</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="applies-info" class="center-block">
+                        <p class="text-success">注：社团本学期可申请的次数为 <strong>剩余申请数</strong>，剩余申请数默认2次。您可以
+                            <button id="reset-applies" class="btn btn-primary">点击此处</button>
+                            <strong> 重置</strong>所有社团剩余申请数
+                        </p>
+                    </div>
+                </div>
+            </section>
+            <section class="col-md-9">
+                <table class="table table-striped table-hover">
+                    <thead>
+                    <tr>
+                        <td>序号</td>
+                        <td>社团</td>
+                        <td>申请时间</td>
+                        <td>申请场所</td>
+                        <td>操作</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </section>
+            <section class="col-md-9">
+                <table class="table table-striped table-hover">
+                    <thead>
+                    <tr>
+                        <td>序号</td>
+                        <td>社团</td>
+                        <td>申请时间</td>
+                        <td>申请场所</td>
+                        <td>操作</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </section>
+            <section class="col-md-9">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label for="earliest" class="col-sm-2 control-label">最早申请时间</label>
+
+                        <div class="col-sm-10">
+                            <input type="number" class="form-control" id="earliest"
+                                   placeholder="请输入天数">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="latest" class="col-sm-2 control-label">最晚申请时间</label>
+
+                        <div class="col-sm-10">
+                            <input type="number" class="form-control" id="latest"
+                                   placeholder="请输入天数">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button type="submit" id="time-btn" class="btn btn-default">提交</button>
+                        </div>
+                    </div>
+                    <div id="time-info" class="center-block">
+                        <p class="text-success">注：社团可以申请的最近的时间为当前时间加上 <strong>最早申请时间</strong>，最早申请时间单位为天，默认7天</p>
+
+                        <p class="text-success">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;社团可以申请的最晚的时间为当前时间加上 <strong>最晚申请时间</strong>，最晚申请时间单位为天，默认30天
+                        </p>
+                    </div>
+                </div>
+            </section>
+            <section class="col-md-9">
+                <table class="table table-striped table-hover">
+                    <thead>
+                    <tr>
+                        <td>序号</td>
+                        <td>申请场所</td>
+                        <td>操作</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label for="saveplace" class="col-sm-2 control-label">新增申请场所</label>
+
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="saveplace"
+                                   placeholder="请输入地点">
+                        </div>
+                        <button type="submit" id="palce-btn" class="btn btn-default pull-right">提交</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+    </div>
+</div>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">提交申请表格</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="recipient-name" class="control-label">申请时间：</label>
+                        <input id="applytime" class="form-control" type="text" placeholder="0000/0/0 晚上" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="control-label">申请场所：</label>
+                        <input id="applyplace" class="form-control" type="text" placeholder="集美大学操场" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="eventname" class="control-label">活动名称：</label>
+                        <input class="form-control" id="eventname" type="text" readonly></input>
+                    </div>
+                    <div class="form-group">
+                        <label for="eventdetail" class="control-label">活动详情：</label>
+                        <textarea class="form-control" rows=4 id="eventdetail" readonly></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="feedback" class="control-label">附加审批：</label>
+                        <textarea class="form-control" id="feedback"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <h5 class="pull-left">当前申请状态：<span id="status">未审核</span></h5>
+                <button id="agree" type="button" class="btn btn-primary">通过</button>
+                <button id="disagree" type="button" class="btn btn-danger">驳回</button>
+                <button type="button" id="close" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var arr = ['早上', '下午', '晚上'];
+    (function () {
+        $.ajax({
+            type: 'get',
+            dataType: 'json',
+            url: '/admin/apply/num',
+            success: function (msg) {
+                if (msg.flag == true) {
+                    if (msg.count > 0) {
+                        $('.badge').text(msg.count);
+                        $('.badge').addClass('show');
+                    }
+                }
+            },
+            error: function () {
+                globalTip({msg: '网络异常,刷新重试', flag: false});
+            }
+        })
+    })()
+    $('#addUser').click(function () {
+        $('#admin-main section').removeClass('show');
+        $('#admin-main section:eq(0)').addClass('show');
+    })
+    $('#userList').click(function () {
+        $('#admin-main section').removeClass('show');
+        $('#admin-main section:eq(1)').addClass('show');
+        $.ajax({
+            type: 'get',
+            url: '/admin/userlist',
+            dataType: 'json',
+            success: function (msg) {
+                if (msg.flag == false) {
+                    globalTip(msg);
+                } else {
+                    var str = '';
+                    var users = eval(msg.user);
+                    $.each(users, function (i, item) {
+                        str += '<tr><td>' + (i + 1) + '</td><td>' + item.username + '</td><td>' + item.organize + '</td><td><button class="btn btn-danger delUser">删除</button></td></tr>'
+                    })
+
+                    $('#admin-main section:eq(1) tbody').html(str);
+                }
+                $(this).removeAttr("disabled");
+            },
+            error: function () {
+                globalTip({msg: '网络异常,刷新重试', flag: false});
+                $(this).removeAttr("disabled");
+            }
+        })
+
+    })
+    $('#changeUserInfo').click(function () {
+        $('#admin-main section').removeClass('show');
+        $('#admin-main section:eq(2)').addClass('show');
+    })
+    $('#non-checked').click(function () {
+        $('#admin-main section').removeClass('show');
+        $('#admin-main section:eq(3)').addClass('show');
+        $.ajax({
+            type: 'get',
+            url: '/admin/apply/nonchecked',
+            dataType: 'json',
+            success: function (msg) {
+                if (msg.flag == false) {
+                    globalTip(msg);
+                } else {
+                    var str = '';
+                    var applys = eval(msg.apply);
+                    $.each(applys, function (i, item) {
+                        var month = (new Date(item.eventime).getMonth() + 1) >= 10 ? (new Date(item.eventime).getMonth() + 1) : '0' + (new Date(item.eventime).getMonth() + 1);
+                        var date = new Date(item.eventime).getDate() >= 10 ? new Date(item.eventime).getDate() : '0' + new Date(item.eventime).getDate();
+                        var time = new Date(item.eventime).getFullYear() + '/' + month + '/' + date + ' ' + arr[item.apn];
+                        str += '<tr><td>' + (i + 1) + '</td><td>' + item.user.organize + '</td><td>' + time + '</td><td>' + item.place + '</td><td><button id="apply-detail" data-name="' + item.eventname + '" data-status="未审核" data-detail="' + item.eventdetail + '" data-remark="' + item.remark + '" data-time="' + time + '" data-place="' + item.place + '" data-id="' + item._id + '" class="btn btn-info">查看</button></td></tr>'
+                    })
+
+                    $('#admin-main section:eq(3) tbody').html(str);
+                }
+            },
+            error: function () {
+                globalTip({msg: '网络异常,刷新重试', flag: false});
+            }
+        })
+    })
+    $('#checked').click(function () {
+        $('#admin-main section').removeClass('show');
+        $('#admin-main section:eq(4)').addClass('show');
+        $.ajax({
+            type: 'get',
+            url: '/admin/apply/checked',
+            dataType: 'json',
+            success: function (msg) {
+                if (msg.flag == false) {
+                    globalTip(msg);
+                } else {
+                    var str = '';
+                    var applys = eval(msg.apply);
+                    $.each(applys, function (i, item) {
+                        var status = item.verify == 0 ? '已驳回' : '已通过';
+                        var month = (new Date(item.eventime).getMonth() + 1) >= 10 ? (new Date(item.eventime).getMonth() + 1) : '0' + (new Date(item.eventime).getMonth() + 1);
+                        var date = new Date(item.eventime).getDate() >= 10 ? new Date(item.eventime).getDate() : '0' + new Date(item.eventime).getDate();
+                        var time = new Date(item.eventime).getFullYear() + '/' + month + '/' + date + ' ' + arr[item.apn];
+                        str += '<tr><td>' + (i + 1) + '</td><td>' + item.user.organize + '</td><td>' + time + '</td><td>' + item.place + '</td><td><button id="apply-detail" data-name="' + item.eventname + '" data-status="' + status + '" data-remark="' + item.remark + '" data-detail="' + item.eventdetail + '" data-time="' + time + '" data-place="' + item.place + '" data-id="' + item._id + '" class="btn btn-info">查看</button></td></tr>'
+                    })
+
+                    $('#admin-main section:eq(4) tbody').html(str);
+                }
+            },
+            error: function () {
+                globalTip({msg: '网络异常,刷新重试', flag: false});
+            }
+        })
+    })
+    $(document).on('click', '#apply-detail', function () {
+        $('#applytime').attr('placeholder', $(this).data('time'));
+        $('#applyplace').attr('placeholder', $(this).data('place'));
+        $('#eventname').attr('placeholder', $(this).data('name'));
+        $('#eventdetail').attr('placeholder', $(this).data('detail'));
+        $('#feedback').val($(this).data('remark'));
+        $('#status').text($(this).data('status'));
+        $('#agree').data('id', $(this).data('id'));
+        $('#myModal').modal();
+    })
+    $('#agree').click(function () {
+        var data = {};
+        data.remark = $.trim($('#feedback').val());
+        data.id = $('#agree').data('id');
+        $.ajax({
+            type: 'post',
+            url: '/admin/apply/agree',
+            dataType: 'json',
+            data: data,
+            success: function (msg) {
+                if (msg.flag == false) {
+                    globalTip(msg);
+                } else {
+                    $('#feedback').val('');
+                    $('#close').click();
+                    $('#non-checked').click();
+                }
+            },
+            error: function () {
+                globalTip({msg: '网络异常,刷新重试', flag: false});
+            }
+        })
+    })
+    $('#disagree').click(function () {
+        var data = {};
+        var _cb = $.trim($('#feedback').val());
+        if (_cb.length == 0) {
+            globalTip({flag: false, msg: '驳回申请须填写附加审批！'});
+            $('#feedback').focus();
+            return false;
+        }
+        data.remark = _cb;
+        data.id = $('#agree').data('id');
+        $.ajax({
+            type: 'post',
+            url: '/admin/apply/disagree',
+            dataType: 'json',
+            data: data,
+            success: function (msg) {
+                if (msg.flag == false) {
+                    globalTip(msg);
+                } else {
+                    $('#feedback').val('');
+                    $('#close').click();
+                    $('#non-checked').click();
+                }
+            },
+            error: function () {
+                globalTip({msg: '网络异常,刷新重试', flag: false});
+            }
+        })
+    })
+    $('#open-time').click(function () {
+        $('#admin-main section').removeClass('show');
+        $('#admin-main section:eq(5)').addClass('show');
+        $.ajax({
+            type: 'get',
+            url: '/admin/opentime',
+            dataType: 'json',
+            success: function (msg) {
+                if (msg.flag == false) {
+                    globalTip(msg);
+                } else {
+                    $('#earliest').val(msg.setting.earliest);
+                    $('#latest').val(msg.setting.latest);
+
+                }
+            },
+            error: function () {
+                globalTip({msg: '网络异常,刷新重试', flag: false});
+            }
+        })
+    })
+    $('#open-place').click(function () {
+        $('#admin-main section').removeClass('show');
+        $('#admin-main section:eq(6)').addClass('show');
+        $.ajax({
+            type: 'get',
+            url: '/admin/openplace',
+            dataType: 'json',
+            success: function (msg) {
+                if (msg.flag == false) {
+                    globalTip(msg);
+                } else {
+                    var str = '';
+                    var place = eval(msg.setting.place);
+                    $.each(place, function (i, item) {
+                        str += '<tr><td>' + (i + 1) + '</td><td>' + item + '</td><td><button class="btn btn-danger delPlace">删除</button></td></tr>'
+                    })
+
+                    $('#admin-main section:eq(6) tbody').html(str);
+                }
+            },
+            error: function () {
+                globalTip({msg: '网络异常,刷新重试', flag: false});
+            }
+        })
+
+    })
+    $('#addUser-btn').click(function () {
+        var data = {};
+        var _username = $.trim($('#username').val());
+        if (_username.length <= 0 || _username == '请输入用户名') {
+            $('#username').focus();
+            globalTip({
+                flag: false,
+                msg: '请填写用户名'
+            });
+            return false;
+        }
+        data.username = _username;
+        var _password = $.trim($('#password').val());
+        if (_password.length <= 0 || _password == '请输入密码') {
+            $('#password').focus();
+            globalTip({
+                flag: false,
+                msg: '请填写密码'
+            });
+            return false;
+        }
+        data.password = $.md5(_password);
+        var _organize = $.trim($('#organize').val());
+        if (_organize.length <= 0 || _organize == '请输入社团名称') {
+            $('#organize').focus();
+            globalTip({
+                flag: false,
+                msg: '请填写社团名称'
+            });
+            return false;
+        }
+        data.organize = _organize;
+        var _phone = $.trim($('#phone').val());
+        if (_phone.length <= 0 || _phone == '请输入联系人电话') {
+            $('#phone').focus();
+            globalTip({
+                flag: false,
+                msg: '请填写联系人电话'
+            });
+            return false;
+        }
+        data.phone = _phone;
+
+        $(this).attr('disabled', 'true');
+        $.ajax({
+            type: 'post',
+            url: '/admin/adduser',
+            dataType: 'json',
+            data: data,
+            success: function (msg) {
+                globalTip(msg);
+                $('#username').val('');
+                $('#password').val('');
+                $('#organize').val('');
+                $('#phone').val('');
+                $('#addUser-btn').removeAttr("disabled");
+            },
+            error: function () {
+                globalTip({msg: '网络异常,刷新重试', flag: false});
+                $('#addUser-btn').removeAttr("disabled");
+            }
+        })
+    })
+    $(document).on("click", ".delUser", function () {
+        var _thisp = $(this).parent().parent();
+        var _username = _thisp.find('td:eq(1)').text();
+        $.ajax({
+            type: 'get',
+            dataType: 'json',
+            url: '/admin/deluser',
+            data: {username: _username},
+            success: function (msg) {
+                globalTip(msg);
+                _thisp.remove();
+            },
+            error: function (msg) {
+                globalTip({msg: '网络异常,刷新重试', flag: false});
+                globalTip(msg);
+            }
+        })
+    });
+    //默认disabled
+    $('#change-info label, #change-info input, #change-info button').attr('disabled', 'true');
+    //获取用户信息
+    $('#getUser').click(function () {
+        var _name = $.trim($('#change-name').val());
+        if (_name.length <= 0 || _name == '请输入用户名') {
+            $('#change-name').focus();
+            globalTip({
+                flag: false,
+                msg: '请填写用户名'
+            });
+            return false;
+        }
+        $(this).attr('disabled', 'true');
+        $.ajax({
+            type: 'post',
+            dataType: 'json',
+            url: '/admin/getuserinfo',
+            data: {username: _name},
+            success: function (msg) {
+                if (msg.flag == false) {
+                    globalTip(msg);
+                }
+                else {
+                    $('#change-info label, #change-info input, #change-info button').removeAttr('disabled');
+                    //填充数据
+                    $('#change-pwd').val(msg.user.password);
+                    $('#change-organize').val(msg.user.organize);
+                    $('#change-applies').val(msg.user.applies);
+                    $('#change-phone').val(msg.user.phone);
+                    $('#change-btn').data('username', _name);
+                }
+                $('#getUser').removeAttr('disabled');
+            },
+            error: function () {
+                globalTip({msg: '网络异常,刷新重试', flag: false});
+                $('#getUser').removeAttr('disabled');
+            }
+        })
+    })
+    //修改用户信息
+    $('#change-btn').click(function () {
+        var data = {};
+        var _pwd = $.trim($('#change-pwd').val());
+        if (_pwd.length == 0) {
+            $('#chang-pwd').focus();
+            globalTip({
+                flag: false,
+                msg: '密码不能为空'
+            });
+            return false;
+        }
+        data.password = _pwd;
+        var _org = $.trim($('#change-organize').val());
+        if (_org.length <= 0) {
+            $('#change-organize').focus();
+            globalTip({
+                flag: false,
+                msg: '社团不能为空'
+            });
+            return false;
+        }
+        data.organize = _org;
+        var _phone = $.trim($('#change-phone').val());
+        if (_phone.length <= 0) {
+            $('#change-phone').focus();
+            globalTip({
+                flag: false,
+                msg: '电话不能为空'
+            });
+            return false;
+        }
+        data.phone = _phone;
+        var _applies = $.trim($('#change-applies').val());
+        if (_applies.length <= 0) {
+            $('#change-applies').focus();
+            globalTip({
+                flag: false,
+                msg: '剩余申请数不能为空'
+            });
+            return false;
+        }
+        data.applies = _applies;
+        data.username = $(this).data('username');
+        $(this).attr('disabled', 'true');
+        $.ajax({
+            type: 'post',
+            dataType: 'json',
+            url: '/admin/updateuser',
+            data: data,
+            success: function (msg) {
+                globalTip(msg);
+                $('#change-name').val('');
+                $('#change-pwd').val('');
+                $('#change-organize').val('');
+                $('#change-phone').val('');
+                $('#change-applies').val('');
+                $('#change-info label, #change-info input, #change-info button').attr('disabled', 'true');
+            },
+            error: function () {
+                globalTip({msg: '网络异常,刷新重试', flag: false});
+            }
+        })
+    })
+    $('#time-btn').click(function () {
+        var data = {};
+        var _earliest = $.trim($('#earliest').val());
+        if (_earliest.length <= 0 || _earliest == '请输入天数') {
+            $('#earliest').focus();
+            globalTip({
+                flag: false,
+                msg: '请填写天数'
+            });
+            return false;
+        }
+        data.earliest = _earliest;
+        var _latest = $.trim($('#latest').val());
+        if (_latest.length <= 0 || _latest == '请输入天数') {
+            $('#latest').focus();
+            globalTip({
+                flag: false,
+                msg: '请填写天数'
+            });
+            return false;
+        }
+        data.latest = _latest;
+        $(this).attr('disabled', 'true');
+        $.ajax({
+            type: 'get',
+            dataType: 'json',
+            url: '/admin/timectrl',
+            data: data,
+            success: function (msg) {
+                globalTip(msg);
+                $('#time-btn').removeAttr('disabled');
+            },
+            error: function () {
+                globalTip({msg: '网络异常,刷新重试', flag: false});
+                $('#time-btn').removeAttr('disabled');
+            }
+        })
+    })
+    $('#palce-btn').click(function () {
+        var data = {};
+        var _saveplace = $.trim($('#saveplace').val());
+        if (_saveplace.length <= 0 || _saveplace == '请输入地点') {
+            $('#saveplace').focus();
+            globalTip({
+                flag: false,
+                msg: '请填写地点'
+            });
+            return false;
+        }
+        data.saveplace = _saveplace;
+        $(this).attr('disabled', 'true');
+        $.ajax({
+            type: 'get',
+            dataType: 'json',
+            url: '/admin/saveplace',
+            data: data,
+            success: function (msg) {
+                globalTip(msg);
+                if (msg.flag) {
+                    $('#saveplace').val('');
+                    var $tbody = $('#admin-main section:eq(6) tbody');
+                    var index = $tbody.find('tr').length;
+                    $tbody.append('<tr><td>' + (index + 1) + '</td><td>' + _saveplace + '</td><td><button class="btn btn-danger delPlace">删除</button></td></tr>');
+                }
+                $('#palce-btn').removeAttr('disabled');
+            },
+            error: function () {
+                globalTip({msg: '网络异常,刷新重试', flag: false});
+                $('#palce-btn').removeAttr('disabled');
+            }
+        })
+    })
+    $(document).on('click', '.delPlace', function () {
+        var $tr = $(this).parent().parent();
+        var _place = $tr.find('td:eq(1)').text();
+        $.ajax({
+            type: 'get',
+            dataType: 'json',
+            url: '/admin/delplace',
+            data: {delplace: _place},
+            success: function (msg) {
+                globalTip(msg);
+                if (msg.flag) {
+                    $tr.remove();
+                }
+            },
+            error: function () {
+                globalTip({msg: '网络异常,刷新重试', flag: false});
+            }
+        })
+    })
+    $('#reset-applies').click(function () {
+        if (confirm("确定要重置所有社团的剩余申请数吗？")) {
+            $('#reset-applies').attr('disabled', 'true');
+            $.ajax({
+                type: 'get',
+                dataType: 'json',
+                url: '/admin/resetapplies',
+                success: function (msg) {
+                    globalTip(msg);
+                    $('#reset-applies').removeAttr('disabled');
+                },
+                error: function () {
+                    globalTip({msg: '网络异常,刷新重试', flag: false});
+                    $('#reset-applies').removeAttr('disabled');
+                }
+            })
+        }
+
+    })
+</script>
+</body>
+</html>

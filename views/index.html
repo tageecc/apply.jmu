@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link href="/libs/bootstrap/dist/css/bootstrap.min.css" , rel="stylesheet"/>
+    <link rel="stylesheet" href="stylesheets/style.css"/>
+    <script src="/libs/jquery/dist/jquery.min.js"></script>
+    <script src="/libs/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="javascripts/velocity.js"></script>
+    <script src="javascripts/main.js"></script>
+</head>
+<body>
+<div id="msg"></div>
+<div class="content">
+    <div class="container">
+        <div class="row">
+            <div class="page-header">
+                <h1><%=title %>
+                    <small> <%=subtitle %></small>
+                </h1>
+                <form action="/user/logout" method="get">
+                    <button id="logout" class="btn btn-danger pull-right">退出登录</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div id="index-main" class="container">
+        <section class="user-msg">
+            <div class="page-header bg-primary">
+                <h3>个人消息</h3>
+            </div>
+            <table class="table table-hover table-striped">
+                <thead>
+                <td>活动日期</td>
+                <td>消息内容</td>
+                </thead>
+                <tr>
+                    <td>*</td>
+                    <td class="text-success">暂无消息！</td>
+                </tr>
+            </table>
+        </section>
+        <section class="apply-table">
+            <div class="page-header bg-primary">
+                <h3>申请活动</h3>
+
+                <div id="place" class="pull-right">
+                    <select class="form-control input-lg">
+                        <% setting.place.forEach(function(item){ %>
+                        <option value="<%= item %>"><%= item %></option>
+                        <%}) %>
+                    </select>
+                </div>
+            </div>
+            <table class="table table-bordered table-striped text-center table-responsive">
+                <thead>
+                <td>日期</td>
+                <td>上午</td>
+                <td>下午</td>
+                <td>晚上</td>
+                </thead>
+                <tbody>
+                <% var array = ['日','一','二','三','四','五','六'] %>
+                <% var early = setting.earliest %>
+                <% var among = setting.latest-setting.earliest %>
+                <% for(var i=1;i<=among;i++){ %>
+                <% var date = new Date(new Date().getTime()+(early++)*24*60*60*1000) %>
+                <tr>
+                    <td style="width: 15%;">
+                        <span><%=date.getFullYear()%>/<%=date.getMonth()+1%>/<%=date.getDate()%></span>
+                        星期<%=array[date.getDay()]%>
+                    </td>
+                    <% if(setting.ban.indexOf(date.getDay())>-1){ %>
+                    <td style="width: 25%;" class="apply-td danger">设备检修...</td>
+                    <td style="width: 25%;" class="apply-td danger">设备检修...</td>
+                    <td style="width: 25%;" class="apply-td danger">设备检修...</td>
+                    <% }else { %>
+                    <td style="width: 25%;" class="apply-td"></td>
+                    <td style="width: 25%;" class="apply-td"></td>
+                    <td style="width: 25%;" class="apply-td"></td>
+                    <% }%>
+                </tr>
+                <% }%>
+                </tbody>
+            </table>
+        </section>
+    </div>
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="exampleModalLabel">提交申请表格</h4>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="recipient-name" class="control-label">申请时间：</label>
+                            <input id="applytime" class="form-control" type="text" placeholder="2015/9/1 下午" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="message-text" class="control-label">申请场所：</label>
+                            <input id="applyplace" class="form-control" type="text" placeholder="集大小万人" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="eventname" class="control-label">活动名称：</label>
+                            <input class="form-control" id="eventname" placeholder="请输入活动名称"></input>
+                        </div>
+                        <div class="form-group">
+                            <label for="eventdetail" class="control-label">活动详情：</label>
+                            <textarea class="form-control" rows=4 id="eventdetail" placeholder="请输入活动详情"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="close" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button id="postApply" type="button" class="btn btn-primary">提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script>
+    var arr = ['上午', '下午', '晚上'];
+    (function () {
+        //个人消息
+        $.ajax({
+            type: 'get',
+            dataType: 'json',
+            url: '/user/msg',
+            success: function (msg) {
+                var str;
+                $.each(msg.msg, function (i, item) {
+                    var month = (new Date(item.eventime).getMonth() + 1) >= 10 ? (new Date(item.eventime).getMonth() + 1) : '0' + (new Date(item.eventime).getMonth() + 1);
+                    var date = new Date(item.eventime).getDate() >= 10 ? new Date(item.eventime).getDate() : '0' + new Date(item.eventime).getDate();
+                    var time = new Date(item.eventime).getFullYear() + '/' + month + '/' + date + ' ' + arr[item.apn];
+                    if (item.flag == true) {
+                        str += '<tr><td>' + time + '</td><td class="text-success">' + item.msg + '</td></tr>'
+                    } else {
+                        str += '<tr><td>' + time + '</td><td class="text-danger">' + item.msg + '</td></tr>'
+                    }
+
+                })
+
+                $('.user-msg tbody').html(str);
+            },
+            error: function () {
+                globalTip({mgs: '网络异常,刷新重试', flag: false});
+            }
+        })
+    })()
+    $('#place select').change(function () {
+        getapply();
+    })
+    $(document).on('click', '.apply-td:not(.success):not(.danger):not(.applied)', function () {
+        var $tr = $(this).parent();
+        var time = $tr.find('td:eq(0) span').text() + ' ' + arr[$(this).index() - 1];
+        $('#applytime').attr('placeholder', time);
+        $('#applyplace').attr('placeholder', $('#place select option:selected').text());
+        $('#myModal').modal();
+    })
+    function getapply() {
+        $('.success').text('');
+        $('.apply-table tbody td').removeClass('success');
+        $('.applied').text('');
+        $('.apply-table tbody td').removeClass('applied');
+        $.ajax({
+            type: 'get',
+            dataType: 'json',
+            url: '/apply',
+            data: {place: $('#place select option:selected').text()},
+            success: function (data) {
+                var applies = eval(data.apply);
+                $.each(applies, function (i, item) {
+                    if (item.isread == 0) {
+                        var v = (new Date(item.eventime).getTime() - new Date($('.apply-table span:eq(1)').text()).getTime()) / (1000 * 60 * 60 * 24) + 1;
+                        var h = item.apn + 1;
+                        var $tr = $('.apply-table tbody tr:eq(' + v + ')');
+                        var $td = $tr.find('td:eq(' + h + '):not(.danger)');
+                        //妈的 脑细胞死n+
+                        $td.addClass('success');
+                        $td.text('正在审核...');
+                    } else if (item.isread == 1 && item.verify == 1) {
+                        var v = (new Date(item.eventime).getTime() - new Date($('.apply-table span:eq(1)').text()).getTime()) / (1000 * 60 * 60 * 24) + 1;
+                        var h = item.apn + 1;
+                        var $tr = $('.apply-table tbody tr:eq(' + v + ')');
+                        var $td = $tr.find('td:eq(' + h + '):not(.danger)');
+                        //妈的 脑细胞死n+
+                        $td.addClass('applied');
+                        $td.text('已被申请');
+                    }
+
+                })
+            },
+            error: function () {
+                globalTip({mgs: '网络异常,刷新重试', flag: false});
+            }
+        })
+    }
+    getapply();
+    $('#postApply').click(function () {
+        var data = {};
+        data.place = $('#applyplace').attr('placeholder');
+        data.eventime = new Date($('#applytime').attr('placeholder').split(' ')[0]);
+        data.apn = arr.indexOf($('#applytime').attr('placeholder').split(' ')[1]);
+        var _name = $.trim($('#eventname').val());
+        if (_name.length <= 0 || _name == '请输入活动名称') {
+            $('#eventname').focus();
+            globalTip({
+                flag: false,
+                msg: '请填写活动名称'
+            });
+            return false;
+        }
+        data.eventname = _name;
+        var _detail = $.trim($('#eventdetail').val());
+        if (_detail.length <= 0 || _detail == '请输入活动详情') {
+            $('#eventdetail').focus();
+            globalTip({
+                flag: false,
+                msg: '请填写活动详情'
+            });
+            return false;
+        }
+        data.eventdetail = _detail;
+        $.ajax({
+            type: 'post',
+            dataType: 'json',
+            url: '/apply',
+            data: data,
+            success: function (data) {
+                globalTip(data);
+                $('#close').click();
+                $('#eventname').val('');
+                $('#eventdetail').val('');
+                getapply();
+            },
+            error: function () {
+                globalTip({mgs: '网络异常,刷新重试', flag: false});
+            }
+        })
+    })
+</script>
+</body>
+</html>

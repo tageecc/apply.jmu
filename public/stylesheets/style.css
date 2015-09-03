@@ -1,0 +1,104 @@
+* {
+    margin: 0;
+    padding: 0;
+    border: 0
+}
+
+body {
+    padding: 50px;
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+    color: #00B7FF;
+}
+
+li {
+    list-style: none;
+}
+
+#msg {
+    width: 100%;
+    height: 66px;
+    position: fixed;
+    top: -66px;
+    left: 0;
+    text-align: center;
+    line-height: 3;
+    font-size: 20px;
+    color: #fff;
+    background-color: #00b3ee;
+    z-index: 100000;
+}
+
+#logout {
+    margin-top: -30px;
+    margin-right: 30px;
+}
+
+#place {
+    margin-top: -33px;
+    margin-right: 3px;
+}
+
+#place select {
+    height: 40px;
+    font-size: 16px;
+    position: relative;
+    z-index: 10;
+}
+
+#change-info {
+    margin-top: 50px
+}
+#admin-main section {
+    display: none;
+}
+
+#time-info {
+    margin-top: 180px;
+    margin-left: 30px;
+    text-indent: 15px;
+    line-height: 2;
+    border-left: 3px solid #3c763d;
+}
+
+#applies-info {
+    width: 730px;
+    margin-top: 80px;
+    margin-left: 40px;
+    text-indent: 15px;
+    line-height: 2;
+    border-left: 3px solid #3c763d;
+}
+
+.require {
+    color: red;
+}
+
+.badge {
+    background-color: #F00;
+    display: none;
+}
+
+#index-main > section > div > h3 {
+    position: relative;
+    top: 10px;
+    left: 10px;
+}
+
+#index-main td {
+    line-height: 1.8;
+}
+
+.apply-td:not(.success):not(.danger):not(.applied) {
+    cursor: pointer;
+}
+
+.apply-td:not(.success):not(.danger):not(.applied):hover {
+    background-color: #00b3ee;
+}
+
+.applied {
+    background-color: #f2dede;
+}
