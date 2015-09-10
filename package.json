@@ -1,6 +1,6 @@
 {
   "name": "apply",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "start": "node ./bin/www"
@@ -22,5 +22,16 @@
   "devDependencies": {},
   "author": "bigtage",
   "license": "ISC",
-  "description": ""
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/keniusuannai/apply.jmu.git"
+  },
+  "bugs": {
+    "url": "https://github.com/keniusuannai/apply.jmu/issues"
+  },
+  "homepage": "https://github.com/keniusuannai/apply.jmu#readme",
+  "description": "for apply",
+  "keywords": [
+    "bigtage"
+  ]
 }
