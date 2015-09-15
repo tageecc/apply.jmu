@@ -25,14 +25,14 @@ exports.signin = function (req, res) {
         }
 
     })
-}
+};
 //处理用户注销
 exports.logout = function (req, res) {
     console.log('logout...');
     delete req.session.user;
     //delete app.locals.user
     res.redirect('/')
-}
+};
 exports.userMsg = function (req, res) {
     console.log('userMsg...');
     var _user = req.session.user;
@@ -60,13 +60,13 @@ exports.userMsg = function (req, res) {
                     msg.apn = apply.apn;
                     arr.push(msg);
                 }
-            })
+            });
             res.end(JSON.stringify({msg: arr}));
 
 
         }
     })
-}
+};
 //申请页面
 exports.index = function (req, res) {
     console.log('index...');
@@ -77,15 +77,15 @@ exports.index = function (req, res) {
             if (err) console.log(err);
             if (setting) {
                 console.log(setting)
-                res.render('index', {title: '集美大学活动申请', subtitle: '主页', setting: setting[0]})
+                res.render('index', {title: '集美大学学生活动场所申请平台', subtitle: '主页', setting: setting[0]})
             } else {
                 res.render('index', {error: '内部修整中，敬请期待！'})
             }
         })
 
     }
-    else res.render('login', {title: '集美大学活动申请', subtitle: '登陆', msg: ''})
-}
+    else res.render('login', {title: '集美大学学生活动场所申请平台', subtitle: '登陆', msg: ''})
+};
 //根据地点和时间段获取申请
 exports.apply = function (req, res) {
     console.log('apply...');
@@ -110,7 +110,7 @@ exports.apply = function (req, res) {
         }
     })
 
-}
+};
 exports.saveApply = function (req, res) {
     console.log('saveApply...');
     //如果提交申请成功 则剩余申请数减一，若申请被驳回再加一
@@ -143,22 +143,22 @@ exports.saveApply = function (req, res) {
         }
     })
 
-}
+};
 exports.showAdmin = function (req, res) {
     console.log('showAdmin...');
-    res.render('admin', {title: '集美大学活动申请', subtitle: '后台管理'})
-}
+    res.render('admin', {title: '集美大学学生活动场所申请平台', subtitle: '后台管理'})
+};
 exports.showLogin = function (req, res) {
     console.log('showLogin...');
-    res.render('login', {title: '集美大学活动申请', subtitle: '登陆', msg: ''})
-}
+    res.render('login', {title: '集美大学学生活动场所申请平台', subtitle: '登陆', msg: ''})
+};
 exports.applyNum = function (req, res) {
     console.log('applyNum...');
     Apply.where({verify: 0, eventime: {$gte: Util.timeNow()}}).count(function (err, count) {
         if (err) res.end(JSON.stringify({msg: '获取未审核申请数失败！', flag: false}));
         else res.end(JSON.stringify({count: count, flag: true}));
     })
-}
+};
 exports.addUser = function (req, res) {
     console.log('addUser...');
     User.create({
@@ -173,14 +173,14 @@ exports.addUser = function (req, res) {
         }
         else res.end(JSON.stringify({msg: '用户添加成功！', flag: true}));
     })
-}
+};
 exports.userList = function (req, res) {
     console.log('userList...');
     User.find({}).exec(function (err, users) {
         if (err) res.end(JSON.stringify({msg: '获取用户列表失败！', flag: false}));
         else res.end(JSON.stringify({msg: '获取用户列表成功！', flag: true, user: users}));
     })
-}
+};
 exports.getUserInfo = function (req, res) {
     console.log('getUserInfo...');
     var _username = req.body.username;
@@ -194,7 +194,7 @@ exports.getUserInfo = function (req, res) {
         }
     })
 
-}
+};
 exports.updateUser = function (req, res) {
     console.log('updateUser...');
     var _username = req.body.username;
@@ -213,14 +213,14 @@ exports.updateUser = function (req, res) {
             if (err) res.end(JSON.stringify({msg: '更新失败！', flag: false}));
             else res.end(JSON.stringify({msg: '更新成功！', flag: true}));
         })
-}
+};
 exports.resetApplies = function (req, res) {
     console.log('resetApplies...');
     User.update({}, {applies: 2}, {multi: true}, function (err) {
         if (err) res.end(JSON.stringify({msg: '重置剩余申请数失败！', flag: false}));
         else res.end(JSON.stringify({msg: '重置剩余申请数成功！', flag: true}));
     })
-}
+};
 exports.delUser = function (req, res) {
     console.log('delUser...');
     var _username = req.query.username;
@@ -229,7 +229,7 @@ exports.delUser = function (req, res) {
         else res.end(JSON.stringify({msg: '删除用户成功！', flag: true}));
     })
 
-}
+};
 exports.unCheckedApply = function (req, res) {
     console.log('unCheckedApply...');
     Apply.find({isread: 0})
@@ -241,7 +241,7 @@ exports.unCheckedApply = function (req, res) {
             }
         })
 
-}
+};
 exports.checkedApply = function (req, res) {
     console.log('checkedApply...');
     Apply.find({isread: 1})
@@ -251,7 +251,7 @@ exports.checkedApply = function (req, res) {
             else res.end(JSON.stringify({msg: '获取已审核申请成功！', flag: true, apply: applys}));
         })
 
-}
+};
 exports.agreeApply = function (req, res) {
     console.log('agreeApply...');
     Apply.update({_id: req.body.id}, {isread: 1, verify: 1, remark: req.body.remark}, function (err) {
@@ -259,7 +259,7 @@ exports.agreeApply = function (req, res) {
         else res.end(JSON.stringify({msg: '审核成功！', flag: true}));
     })
 
-}
+};
 exports.disagreeApply = function (req, res) {
     console.log('disagreeApply...');
     Apply.findOneAndUpdate({_id: req.body.id}, {isread: 1, verify: 0, remark: req.body.remark}, function (err, apply) {
@@ -272,12 +272,12 @@ exports.disagreeApply = function (req, res) {
                     user.applies++;
                     user.save();
                 }
-            })
+            });
             res.end(JSON.stringify({msg: '审核成功！', flag: true}));
         }
     })
 
-}
+};
 exports.timeCtrl = function (req, res) {
     console.log('timeCtrl...');
     console.log(req.query.earliest, req.query.latest);
@@ -289,14 +289,14 @@ exports.timeCtrl = function (req, res) {
         else res.end(JSON.stringify({msg: '修改成功！', flag: true}));
     })
 
-}
+};
 exports.openTime = function (req, res) {
     console.log('openTime...');
     Setting.findOne({}, function (err, setting) {
         if (err) res.end(JSON.stringify({msg: '获取活动地址失败！', flag: false}));
         else res.end(JSON.stringify({msg: '获取活动地址成功！', flag: true, setting: setting}));
     })
-}
+};
 exports.openPlace = function (req, res) {
     console.log('openPlace...');
     Setting.findOne({}, function (err, setting) {
@@ -304,7 +304,7 @@ exports.openPlace = function (req, res) {
         else res.end(JSON.stringify({msg: '获取活动地址成功！', flag: true, setting: setting}));
     })
 
-}
+};
 exports.savePlace = function (req, res) {
     console.log('savePlace...');
     console.log(req.query.saveplace)
@@ -318,7 +318,7 @@ exports.savePlace = function (req, res) {
         }
     })
 
-}
+};
 exports.delPlace = function (req, res) {
     console.log('savePlace...');
     console.log(req.query.delplace)
@@ -332,7 +332,7 @@ exports.delPlace = function (req, res) {
         }
     })
 
-}
+};
 
 // midware for user
 exports.signinRequired = function (req, res, next) {
@@ -343,10 +343,10 @@ exports.signinRequired = function (req, res, next) {
     }
 
     next()
-}
+};
 
 exports.adminRequired = function (req, res, next) {
-    var user = req.session.user
+    var user = req.session.user;
     console.log(user);
     if (!user) {
         return res.redirect('/login')
@@ -356,4 +356,4 @@ exports.adminRequired = function (req, res, next) {
     }
 
     next()
-}
+};
