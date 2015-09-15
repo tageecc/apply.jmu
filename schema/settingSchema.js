@@ -18,12 +18,12 @@ var SettingSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.Mixed,
         default: ['月明楼小舞厅', '万人体育场']
     }
-})
+});
 SettingSchema.statics = {
     fetch: function (cb) {
         return this
             .find({})
             .exec(cb)
     }
-}
-module.exports = SettingSchema
+};
+module.exports = SettingSchema;

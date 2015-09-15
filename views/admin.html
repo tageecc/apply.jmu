@@ -31,16 +31,16 @@
             <section class="col-md-3">
                 <div class="list-group">
                     <a href="#" class="list-group-item active">
-                        <h4 class="list-group-item-heading">社团管理</h4>
+                        <h4 class="list-group-item-heading">申请单位管理</h4>
                     </a>
                     <a href="#" id="addUser" class="list-group-item">
-                        <h4 class="list-group-item-heading">添加社团</h4>
+                        <h4 class="list-group-item-heading">添加申请单位</h4>
                     </a>
                     <a href="#" id="userList" class="list-group-item">
-                        <h4 class="list-group-item-heading">社团列表</h4>
+                        <h4 class="list-group-item-heading">申请单位列表</h4>
                     </a>
                     <a href="#" id="changeUserInfo" class="list-group-item">
-                        <h4 class="list-group-item-heading">社团信息</h4>
+                        <h4 class="list-group-item-heading">申请单位信息</h4>
                     </a>
                 </div>
                 <div class="list-group">
@@ -93,11 +93,11 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="organize" class="col-sm-2 control-label">社团名<span class="require">*</span></label>
+                        <label for="organize" class="col-sm-2 control-label">申请单位名<span class="require">*</span></label>
 
                         <div class="col-sm-10">
                             <input type="text" class="form-control" id="organize" autocomplete="off"
-                                   placeholder="请输入社团名">
+                                   placeholder="请输入申请单位名">
                         </div>
                     </div>
                     <div class="form-group">
@@ -121,7 +121,7 @@
                     <tr>
                         <td>序号</td>
                         <td>用户名</td>
-                        <td>社团名称</td>
+                        <td>申请单位名称</td>
                         <td>操作</td>
                     </tr>
                     </thead>
@@ -158,7 +158,7 @@
 
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="change-organize"
-                                       placeholder="请输入社团名称">
+                                       placeholder="请输入申请单位名称">
                             </div>
                         </div>
                         <div class="form-group">
@@ -186,9 +186,9 @@
                         </div>
                     </div>
                     <div id="applies-info" class="center-block">
-                        <p class="text-success">注：社团本学期可申请的次数为 <strong>剩余申请数</strong>，剩余申请数默认2次。您可以
+                        <p class="text-success">注：申请单位本学期可申请的次数为 <strong>剩余申请数</strong>，剩余申请数默认2次。您可以
                             <button id="reset-applies" class="btn btn-primary">点击此处</button>
-                            <strong> 重置</strong>所有社团剩余申请数
+                            <strong> 重置</strong>所有申请单位剩余申请数
                         </p>
                     </div>
                 </div>
@@ -198,7 +198,7 @@
                     <thead>
                     <tr>
                         <td>序号</td>
-                        <td>社团</td>
+                        <td>申请单位</td>
                         <td>申请时间</td>
                         <td>申请场所</td>
                         <td>操作</td>
@@ -213,7 +213,7 @@
                     <thead>
                     <tr>
                         <td>序号</td>
-                        <td>社团</td>
+                        <td>申请单位</td>
                         <td>申请时间</td>
                         <td>申请场所</td>
                         <td>操作</td>
@@ -247,9 +247,9 @@
                         </div>
                     </div>
                     <div id="time-info" class="center-block">
-                        <p class="text-success">注：社团可以申请的最近的时间为当前时间加上 <strong>最早申请时间</strong>，最早申请时间单位为天，默认7天</p>
+                        <p class="text-success">注：申请单位可以申请的最近的时间为当前时间加上 <strong>最早申请时间</strong>，最早申请时间单位为天，默认7天</p>
 
-                        <p class="text-success">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;社团可以申请的最晚的时间为当前时间加上 <strong>最晚申请时间</strong>，最晚申请时间单位为天，默认30天
+                        <p class="text-success">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;申请单位可以申请的最晚的时间为当前时间加上 <strong>最晚申请时间</strong>，最晚申请时间单位为天，默认30天
                         </p>
                     </div>
                 </div>
@@ -568,11 +568,11 @@
         }
         data.password = $.md5(_password);
         var _organize = $.trim($('#organize').val());
-        if (_organize.length <= 0 || _organize == '请输入社团名称') {
+        if (_organize.length <= 0 || _organize == '请输入申请单位名称') {
             $('#organize').focus();
             globalTip({
                 flag: false,
-                msg: '请填写社团名称'
+                msg: '请填写申请单位名称'
             });
             return false;
         }
@@ -684,7 +684,7 @@
             $('#change-organize').focus();
             globalTip({
                 flag: false,
-                msg: '社团不能为空'
+                msg: '申请单位不能为空'
             });
             return false;
         }
@@ -822,7 +822,7 @@
         })
     })
     $('#reset-applies').click(function () {
-        if (confirm("确定要重置所有社团的剩余申请数吗？")) {
+        if (confirm("确定要重置所有申请单位的剩余申请数吗？")) {
             $('#reset-applies').attr('disabled', 'true');
             $.ajax({
                 type: 'get',

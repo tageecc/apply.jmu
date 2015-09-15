@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 var User = require('../model/user');
-var Apply = require('../model/apply');
+var Apply = require('../model/apply');//
 var Setting = require('../model/setting');
 var Util = require('../util/util');
 
@@ -29,7 +29,7 @@ exports.signin = function (req, res) {
 //处理用户注销
 exports.logout = function (req, res) {
     console.log('logout...');
-    delete req.session.user
+    delete req.session.user;
     //delete app.locals.user
     res.redirect('/')
 }
@@ -254,7 +254,7 @@ exports.checkedApply = function (req, res) {
 }
 exports.agreeApply = function (req, res) {
     console.log('agreeApply...');
-    Apply.update({_id: req.body.id}, {isread: 1, verify: 1, remark: req.body.remark}, function (err, apply) {
+    Apply.update({_id: req.body.id}, {isread: 1, verify: 1, remark: req.body.remark}, function (err) {
         if (err) res.end(JSON.stringify({msg: '审核失败！', flag: false}));
         else res.end(JSON.stringify({msg: '审核成功！', flag: true}));
     })

@@ -180,7 +180,6 @@
                         var h = item.apn + 1;
                         var $tr = $('.apply-table tbody tr:eq(' + v + ')');
                         var $td = $tr.find('td:eq(' + h + '):not(.danger)');
-                        //妈的 脑细胞死n+
                         $td.addClass('success');
                         $td.text('正在审核...');
                     } else if (item.isread == 1 && item.verify == 1) {
@@ -188,7 +187,6 @@
                         var h = item.apn + 1;
                         var $tr = $('.apply-table tbody tr:eq(' + v + ')');
                         var $td = $tr.find('td:eq(' + h + '):not(.danger)');
-                        //妈的 脑细胞死n+
                         $td.addClass('applied');
                         $td.text('已被申请');
                     }
