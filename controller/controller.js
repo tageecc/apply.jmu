@@ -76,10 +76,10 @@ exports.index = function (req, res) {
         Setting.fetch(function (err, setting) {
             if (err) console.log(err);
             if (setting) {
-                console.log(setting)
+                console.log(setting);
                 res.render('index', {title: '集美大学学生活动场所申请平台', subtitle: '主页', setting: setting[0]})
             } else {
-                res.render('index', {error: '内部修整中，敬请期待！'})
+                res.render('error', {error: '内部修整中，敬请期待！'})
             }
         })
 
