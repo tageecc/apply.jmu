@@ -55,10 +55,13 @@
             </div>
             <table class="table table-bordered table-striped text-center table-responsive">
                 <thead>
-                <td>日期</td>
-                <td>上午</td>
-                <td>下午</td>
-                <td>晚上</td>
+                <tr>
+                    <td>日期</td>
+                    <td>上午</td>
+                    <td>下午</td>
+                    <td>晚上</td>
+                </tr>
+
                 </thead>
                 <tbody>
                 <% var array = ['日','一','二','三','四','五','六'] %>
@@ -97,16 +100,16 @@
                 <div class="modal-body">
                     <form>
                         <div class="form-group">
-                            <label for="recipient-name" class="control-label">申请时间：</label>
+                            <label for="applytime" class="control-label">申请时间：</label>
                             <input id="applytime" class="form-control" type="text" placeholder="2015/9/1 下午" readonly>
                         </div>
                         <div class="form-group">
-                            <label for="message-text" class="control-label">申请场所：</label>
+                            <label for="applyplace" class="control-label">申请场所：</label>
                             <input id="applyplace" class="form-control" type="text" placeholder="集大小万人" readonly>
                         </div>
                         <div class="form-group">
                             <label for="eventname" class="control-label">活动名称：</label>
-                            <input class="form-control" id="eventname" placeholder="请输入活动名称"></input>
+                            <input class="form-control" id="eventname" placeholder="请输入活动名称"/>
                         </div>
                         <div class="form-group">
                             <label for="eventdetail" class="control-label">活动详情：</label>

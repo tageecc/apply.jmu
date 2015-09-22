@@ -4,9 +4,13 @@
     <meta charset="UTF-8">
     <title><%=title %>--<%=subtitle %></title>
     <link href="/libs/bootstrap/dist/css/bootstrap.min.css" , rel="stylesheet"/>
+    <link href="/libs/bootstrap-datetimepicker.min.css" , rel="stylesheet"/>
+    <link href="/libs/bootstrap-theme.min.css" , rel="stylesheet"/>
     <link rel="stylesheet" href="stylesheets/style.css"/>
     <script src="/libs/jquery/dist/jquery.min.js"></script>
     <script src="/libs/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="/libs/bootstrap-datetimepicker.js"></script>
+    <script src="/libs/bootstrap-datetimepicker.zh-CN.js"></script>
     <script src="javascripts/md5.min.js"></script>
     <script src="javascripts/velocity.js"></script>
     <script src="javascripts/main.js"></script>
@@ -26,7 +30,7 @@
             </div>
         </div>
     </div>
-    <div class="container">
+    <div class="container" style="min-width: 1200px;">
         <div id="admin-nav">
             <section class="col-md-3">
                 <div class="list-group">
@@ -54,6 +58,9 @@
                     </a>
                     <a href="#" id="checked" class="list-group-item">
                         <h4 class="list-group-item-heading">已审核</h4>
+                    </a>
+                    <a href="#" id="print" class="list-group-item">
+                        <h4 class="list-group-item-heading">打印报表</h4>
                     </a>
                 </div>
                 <div class="list-group">
@@ -224,6 +231,41 @@
                 </table>
             </section>
             <section class="col-md-9">
+                <form action="/admin/print" method="post" target="_blank">
+                    <div class="form-group col-md-offset-3">
+                        <label for="print_begin" class="col-sm-2 control-label" style="line-height: 2.5em">起始时间：</label>
+
+                        <div class="input-group date form_date_begin col-md-5" data-date="" data-date-format=""
+                             data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                            <input class="form-control" id="print_begin" size="16" type="text" value="" readonly>
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </span>
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-offset-3">
+                        <label for="print_end" class="col-sm-2 control-label" style="line-height: 2.5em">终止时间：</label>
+
+                        <div class="input-group date form_date_end col-md-5" data-date="" data-date-format=""
+                             data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                            <input class="form-control" id="print_end" size="16" type="text" value="" readonly>
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </span>
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                        </div>
+                    </div>
+                    <div class="col-xs-10 center-block ">
+                        <button id="printBtn" onclick="return printCheck();" class="btn btn-primary center-block">打印</button>
+                    </div>
+                </form>
+            </section>
+            <section class="col-md-9">
                 <div class="form-horizontal">
                     <div class="form-group">
                         <label for="earliest" class="col-sm-2 control-label">最早申请时间</label>
@@ -293,16 +335,16 @@
             <div class="modal-body">
                 <form>
                     <div class="form-group">
-                        <label for="recipient-name" class="control-label">申请时间：</label>
+                        <label for="applytime" class="control-label">申请时间：</label>
                         <input id="applytime" class="form-control" type="text" placeholder="0000/0/0 晚上" readonly>
                     </div>
                     <div class="form-group">
-                        <label for="message-text" class="control-label">申请场所：</label>
+                        <label for="applyplace" class="control-label">申请场所：</label>
                         <input id="applyplace" class="form-control" type="text" placeholder="集美大学操场" readonly>
                     </div>
                     <div class="form-group">
                         <label for="eventname" class="control-label">活动名称：</label>
-                        <input class="form-control" id="eventname" type="text" readonly></input>
+                        <input class="form-control" id="eventname" type="text" readonly/>
                     </div>
                     <div class="form-group">
                         <label for="eventdetail" class="control-label">活动详情：</label>
@@ -324,7 +366,7 @@
     </div>
 </div>
 <script>
-    var arr = ['早上', '下午', '晚上'];
+    var arr = ['上午', '下午', '晚上'];
     (function () {
         $.ajax({
             type: 'get',
@@ -342,11 +384,11 @@
                 globalTip({msg: '网络异常,刷新重试', flag: false});
             }
         })
-    })()
+    })();
     $('#addUser').click(function () {
         $('#admin-main section').removeClass('show');
         $('#admin-main section:eq(0)').addClass('show');
-    })
+    });
     $('#userList').click(function () {
         $('#admin-main section').removeClass('show');
         $('#admin-main section:eq(1)').addClass('show');
@@ -374,11 +416,11 @@
             }
         })
 
-    })
+    });
     $('#changeUserInfo').click(function () {
         $('#admin-main section').removeClass('show');
         $('#admin-main section:eq(2)').addClass('show');
-    })
+    });
     $('#non-checked').click(function () {
         $('#admin-main section').removeClass('show');
         $('#admin-main section:eq(3)').addClass('show');
@@ -406,7 +448,7 @@
                 globalTip({msg: '网络异常,刷新重试', flag: false});
             }
         })
-    })
+    });
     $('#checked').click(function () {
         $('#admin-main section').removeClass('show');
         $('#admin-main section:eq(4)').addClass('show');
@@ -435,7 +477,7 @@
                 globalTip({msg: '网络异常,刷新重试', flag: false});
             }
         })
-    })
+    });
     $(document).on('click', '#apply-detail', function () {
         $('#applytime').attr('placeholder', $(this).data('time'));
         $('#applyplace').attr('placeholder', $(this).data('place'));
@@ -445,7 +487,7 @@
         $('#status').text($(this).data('status'));
         $('#agree').data('id', $(this).data('id'));
         $('#myModal').modal();
-    })
+    });
     $('#agree').click(function () {
         var data = {};
         data.remark = $.trim($('#feedback').val());
@@ -468,7 +510,7 @@
                 globalTip({msg: '网络异常,刷新重试', flag: false});
             }
         })
-    })
+    });
     $('#disagree').click(function () {
         var data = {};
         var _cb = $.trim($('#feedback').val());
@@ -497,10 +539,14 @@
                 globalTip({msg: '网络异常,刷新重试', flag: false});
             }
         })
-    })
-    $('#open-time').click(function () {
+    });
+    $('#print').click(function () {
         $('#admin-main section').removeClass('show');
         $('#admin-main section:eq(5)').addClass('show');
+    });
+    $('#open-time').click(function () {
+        $('#admin-main section').removeClass('show');
+        $('#admin-main section:eq(6)').addClass('show');
         $.ajax({
             type: 'get',
             url: '/admin/opentime',
@@ -521,7 +567,7 @@
     })
     $('#open-place').click(function () {
         $('#admin-main section').removeClass('show');
-        $('#admin-main section:eq(6)').addClass('show');
+        $('#admin-main section:eq(7)').addClass('show');
         $.ajax({
             type: 'get',
             url: '/admin/openplace',
@@ -536,7 +582,7 @@
                         str += '<tr><td>' + (i + 1) + '</td><td>' + item + '</td><td><button class="btn btn-danger delPlace">删除</button></td></tr>'
                     })
 
-                    $('#admin-main section:eq(6) tbody').html(str);
+                    $('#admin-main section:eq(7) tbody').html(str);
                 }
             },
             error: function () {
@@ -607,7 +653,7 @@
                 $('#addUser-btn').removeAttr("disabled");
             }
         })
-    })
+    });
     $(document).on("click", ".delUser", function () {
         var _thisp = $(this).parent().parent();
         var _username = _thisp.find('td:eq(1)').text();
@@ -666,7 +712,7 @@
             }
         })
     });
-    $('#change-pwd').blur(function(){
+    $('#change-pwd').blur(function () {
         console.log($(this).val());
         $(this).val($.md5($(this).val()));
     });
@@ -771,7 +817,7 @@
                 $('#time-btn').removeAttr('disabled');
             }
         })
-    })
+    });
     $('#palce-btn').click(function () {
         var data = {};
         var _saveplace = $.trim($('#saveplace').val());
@@ -805,7 +851,7 @@
                 $('#palce-btn').removeAttr('disabled');
             }
         })
-    })
+    });
     $(document).on('click', '.delPlace', function () {
         var $tr = $(this).parent().parent();
         var _place = $tr.find('td:eq(1)').text();
@@ -824,7 +870,7 @@
                 globalTip({msg: '网络异常,刷新重试', flag: false});
             }
         })
-    })
+    });
     $('#reset-applies').click(function () {
         if (confirm("确定要重置所有申请单位的剩余申请数吗？")) {
             $('#reset-applies').attr('disabled', 'true');
@@ -843,7 +889,41 @@
             })
         }
 
-    })
+    });
+    $('.form_date_begin ,.form_date_end').datetimepicker({
+        language: 'zh-CN',
+        weekStart: 1,
+        todayBtn: 1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 2,
+        minView: 2,
+        forceParse: 0
+    });
+    $('.form_date_begin').on('changeDate', function () {
+        $("#print_end").val('');
+        $('.form_date_end').datetimepicker('setStartDate', $("#print_begin").val());
+        $('.form_date_begin').datetimepicker('hide');
+    });
+
+    function printCheck(){
+        if ($.trim($('#print_begin').val()).length <= 0) {
+            $('#print_begin').focus();
+            globalTip({
+                flag: false,
+                msg: '请选择起始时间'
+            });
+            return false;
+        }
+        if ($.trim($('#print_end').val()).length <= 0) {
+            $('#print_end').focus();
+            globalTip({
+                flag: false,
+                msg: '请选择结束时间'
+            });
+            return false;
+        }
+    }
 </script>
 </body>
 </html>

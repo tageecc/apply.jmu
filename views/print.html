@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><%=title %>--<%=subtitle %></title>
+    <link href="/libs/bootstrap/dist/css/bootstrap.min.css" , rel="stylesheet"/>
+    <link rel="stylesheet" href="../stylesheets/style.css"/>
+    <style>
+    </style>
+</head>
+<body>
+<div class="content">
+    <div class="container">
+        <div class="row">
+            <div class="page-header">
+                <h1><%=title %>
+                    <small> <%=subtitle %></small>
+                </h1>
+                <button id="logout" onclick="ptn()" class="btn btn-primary pull-right">点击打印</button>
+            </div>
+        </div>
+    </div>
+    <div id="index-main" class="container">
+        <% var array = ['日','一','二','三','四','五','六'] %>
+        <% var arrapn = ['上午','下午','晚上']%>
+        <% var map={}%>
+        <% for(var i = 0;i< applies.length;i++) {%>
+        <% if(!map[applies[i].place]) {%>
+        <% var list=[] %>
+        <% list.push(applies[i]) %>
+        <% map[applies[i].place]=list %>
+        <% }else{ %>
+        <% map[applies[i].place].push(applies[i]) %>
+        <% } %>
+        <% } %>
+        <% for(var place in map){%>
+        <% var apply = map[place] %>
+        <section class="apply-table">
+            <div class="page-header bg-primary">
+                <h3><%=apply[0].place %></h3>
+            </div>
+            <table class="table table-bordered table-striped text-center table-responsive">
+                <thead>
+                <tr>
+                    <td>日期</td>
+                    <td>活动名称</td>
+                    <td>申请单位</td>
+                </tr>
+                </thead>
+                <tbody>
+                <% for(var i = 0;i< apply.length;i++){%>
+                <tr>
+                    <td style="width: 26%;">
+                        <span><%=apply[i].eventime.getFullYear()%>/<%=apply[i].eventime.getMonth()+1%>/<%=apply[i].eventime.getDate()%></span>
+                        <br/>星期<%=array[apply[i].eventime.getDay()]%>&nbsp;&nbsp;<%=arrapn[apply[i].apn]%>
+                    </td>
+                    <td class="apply-td" style="vertical-align:middle;"><%= apply[i].eventname %></td>
+                    <td class="apply-td" style="vertical-align:middle;"><%= apply[i].user.username%></td>
+                </tr>
+                <% }%>
+                </tbody>
+            </table>
+        </section>
+        <% }%>
+    </div>
+</div>
+</body>
+<script>
+    function ptn(){
+        document.getElementById('logout').style.display = "none";
+        window.print();
+        window.close();
+    }
+</script>
+</html>

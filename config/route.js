@@ -21,6 +21,7 @@ module.exports = function (app) {
 
     app.get('/admin', controller.adminRequired, controller.showAdmin);
     app.get('/admin/apply/num', controller.adminRequired, controller.applyNum);
+    app.post('/admin/print', controller.adminRequired, controller.print);
     app.post('/admin/adduser', controller.adminRequired, controller.addUser);
     app.get('/admin/userlist', controller.adminRequired, controller.userList);
     app.post('/admin/getuserinfo', controller.adminRequired, controller.getUserInfo);

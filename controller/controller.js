@@ -159,16 +159,29 @@ exports.applyNum = function (req, res) {
         else res.end(JSON.stringify({count: count, flag: true}));
     })
 };
+exports.print = function (req, res) {
+    console.log('print...');
+    Apply.find({
+        verify: 1,
+        eventime: {$gte: Util.decrement(req.query.begin, 1), $lte: req.query.end}
+    }).populate('user','-password').exec(function (err, applies) {
+        if (err) res.render('error', {error: '获取打印信息失败！'});
+        else {
+            res.render('print', {applies: applies, title: '集美大学学生活动场所申请平台', subtitle: '报表'});
+            console.log(applies);
+        }
+    })
+};
 exports.addUser = function (req, res) {
     console.log('addUser...');
     User.create({
         username: req.body.username,
         password: req.body.password,
         organize: req.body.organize,
-        phone: req.body.phone,
+        phone: req.body.phone
     }, function (err) {
         if (err) {
-            var msg = err.code == 11000 ? ',已存在该用户！' : '!'
+            var msg = err.code == 11000 ? ',已存在该用户！' : '!';
             res.end(JSON.stringify({msg: '用户添加失败' + msg, flag: false}));
         }
         else res.end(JSON.stringify({msg: '用户添加成功！', flag: true}));
@@ -336,8 +349,7 @@ exports.delPlace = function (req, res) {
 
 // midware for user
 exports.signinRequired = function (req, res, next) {
-    var user = req.session.user
-
+    var user = req.session.user;
     if (!user) {
         return res.redirect('/login')
     }
