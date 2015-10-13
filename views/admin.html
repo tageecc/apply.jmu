@@ -368,7 +368,10 @@
 </div>
 <script>
     var arr = ['上午', '下午', '晚上'];
-    (function () {
+    $(document).ready(function () {
+        getApplyiesNum();
+    });
+    function getApplyiesNum() {
         $.ajax({
             type: 'get',
             dataType: 'json',
@@ -385,7 +388,8 @@
                 globalTip({msg: '网络异常,刷新重试', flag: false});
             }
         })
-    })();
+    }
+
     $('#addUser').click(function () {
         $('#admin-main section').removeClass('show');
         $('#admin-main section:eq(0)').addClass('show');
@@ -440,7 +444,7 @@
                         var date = new Date(item.eventime).getDate() >= 10 ? new Date(item.eventime).getDate() : '0' + new Date(item.eventime).getDate();
                         var time = new Date(item.eventime).getFullYear() + '/' + month + '/' + date + ' ' + arr[item.apn];
                         str += '<tr><td>' + (i + 1) + '</td><td>' + item.user.organize + '</td><td>' + time + '</td><td>' + item.place + '</td><td><button id="apply-detail" data-name="' + item.eventname + '" data-status="未审核" data-detail="' + item.eventdetail + '" data-remark="' + item.remark + '" data-time="' + time + '" data-place="' + item.place + '" data-id="' + item._id + '" class="btn btn-info">查看</button></td></tr>'
-                    })
+                    });
 
                     $('#admin-main section:eq(3) tbody').html(str);
                 }
@@ -468,7 +472,7 @@
                         var month = (new Date(item.eventime).getMonth() + 1) >= 10 ? (new Date(item.eventime).getMonth() + 1) : '0' + (new Date(item.eventime).getMonth() + 1);
                         var date = new Date(item.eventime).getDate() >= 10 ? new Date(item.eventime).getDate() : '0' + new Date(item.eventime).getDate();
                         var time = new Date(item.eventime).getFullYear() + '/' + month + '/' + date + ' ' + arr[item.apn];
-                        str += '<tr><td>' + (i + 1) + '</td><td>' +  (item.user==null?'用户已被删除':item.user.organize) + '</td><td>' + time + '</td><td>' + item.place + '</td><td><button id="apply-detail" data-name="' + item.eventname + '" data-status="' + status + '" data-remark="' + item.remark + '" data-detail="' + item.eventdetail + '" data-time="' + time + '" data-place="' + item.place + '" data-id="' + item._id + '" class="btn btn-info">查看</button></td></tr>'
+                        str += '<tr><td>' + (i + 1) + '</td><td>' + (item.user == null ? '用户已被删除' : item.user.organize) + '</td><td>' + time + '</td><td>' + item.place + '</td><td><button id="apply-detail" data-name="' + item.eventname + '" data-status="' + status + '" data-remark="' + item.remark + '" data-detail="' + item.eventdetail + '" data-time="' + time + '" data-place="' + item.place + '" data-id="' + item._id + '" class="btn btn-info">查看</button></td></tr>'
                     });
 
                     $('#admin-main section:eq(4) tbody').html(str);
@@ -505,6 +509,7 @@
                     $('#feedback').val('');
                     $('#close').click();
                     $('#non-checked').click();
+                    getApplyiesNum();
                 }
             },
             error: function () {
@@ -534,6 +539,7 @@
                     $('#feedback').val('');
                     $('#close').click();
                     $('#non-checked').click();
+                    getApplyiesNum();
                 }
             },
             error: function () {
@@ -780,7 +786,7 @@
                 globalTip({msg: '网络异常,刷新重试', flag: false});
             }
         })
-    })
+    });
     $('#time-btn').click(function () {
         var data = {};
         var _earliest = $.trim($('#earliest').val());
