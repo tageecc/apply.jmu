@@ -409,7 +409,7 @@
                     var users = eval(msg.user);
                     $.each(users, function (i, item) {
                         str += '<tr><td>' + (i + 1) + '</td><td>' + item.username + '</td><td>' + item.organize + '</td><td><button class="btn btn-danger delUser">删除</button></td></tr>'
-                    })
+                    });
 
                     $('#admin-main section:eq(1) tbody').html(str);
                 }

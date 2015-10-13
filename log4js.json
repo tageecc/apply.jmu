@@ -1,0 +1,25 @@
+{
+  "appenders":
+  [
+    {
+      "type":"console",
+      "category":"console"
+    },
+    {
+      "category":"log_file",
+      "type": "dateFile",
+      "filename": "./logs/data",
+      "pattern": "-yyyy-MM-dd.log",
+      "alwaysIncludePattern": true,
+      "maxLogSize": 104800,
+      "backups": 100
+    }
+
+  ],
+  "replaceConsole": true,
+  "levels":
+  {
+    "log_file":"ALL",
+    "console":"ALL"
+  }
+}

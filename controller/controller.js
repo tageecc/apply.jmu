@@ -3,10 +3,11 @@ var User = require('../model/user');
 var Apply = require('../model/apply');//
 var Setting = require('../model/setting');
 var Util = require('../util/util');
+var log = require('../config/log4js');
 
 //处理用户登陆
 exports.signin = function (req, res) {
-    console.log('signin...');
+    log.info('signin...');
     var _username = req.body.username;
     var _password = req.body.password;
     User.findOne({username: _username, password: _password}, function (err, user) {
@@ -28,17 +29,17 @@ exports.signin = function (req, res) {
 };
 //处理用户注销
 exports.logout = function (req, res) {
-    console.log('logout...');
+    log.info('logout...');
     delete req.session.user;
     //delete app.locals.user
     res.redirect('/')
 };
 exports.userMsg = function (req, res) {
-    console.log('userMsg...');
+    log.info('userMsg...');
     var _user = req.session.user;
     var arr = [];
     Apply.find({user: _user._id}).exec(function (err, applies) {
-        if (err) console.log(err);
+        if (err) log.info(err);
         else if (applies.length > 0) {
             var str;
             applies.forEach(function (apply) {
@@ -69,14 +70,14 @@ exports.userMsg = function (req, res) {
 };
 //申请页面
 exports.index = function (req, res) {
-    console.log('index...');
+    log.info('index...');
     var user = req.session.user;
     if (user) {
         //如果用户已登录 则返回主页 setting值
         Setting.fetch(function (err, setting) {
-            if (err) console.log(err);
+            if (err) log.info(err);
             if (setting) {
-                console.log(setting);
+                log.info(setting);
                 res.render('index', {title: '集美大学学生活动场所申请平台', subtitle: '主页', setting: setting[0]})
             } else {
                 res.render('error', {error: '内部修整中，敬请期待！'})
@@ -88,10 +89,10 @@ exports.index = function (req, res) {
 };
 //根据地点和时间段获取申请
 exports.apply = function (req, res) {
-    console.log('apply...');
+    log.info('apply...');
     var _place = req.query.place;
     Setting.fetch(function (err, setting) {
-        if (err) console.log(err);
+        if (err) log.info(err);
         if (setting) {
             Apply.find({
                     place: _place,
@@ -101,7 +102,7 @@ exports.apply = function (req, res) {
                     }
                 },
                 function (err, apply) {
-                    if (err) console.log(err);
+                    if (err) log.info(err);
                     if (apply) {
                         res.end(JSON.stringify({apply: apply}));
                     }
@@ -112,12 +113,12 @@ exports.apply = function (req, res) {
 
 };
 exports.saveApply = function (req, res) {
-    console.log('saveApply...');
+    log.info('saveApply...');
     //如果提交申请成功 则剩余申请数减一，若申请被驳回再加一
     User.findOne({_id: req.session.user._id}, function (err, user) {
-        if (err) console.log(err);
+        if (err) log.info(err);
         else {
-            console.log(user);
+            log.info(user);
             if (--user.applies >= 0) {
                 user.save();
                 Apply.create({
@@ -129,7 +130,7 @@ exports.saveApply = function (req, res) {
                     eventdetail: req.body.eventdetail
                 }, function (err) {
                     if (err) {
-                        console.log(err);
+                        log.info(err);
                         res.end(JSON.stringify({msg: '申请提交失败' + msg, flag: false}));
                     }
                     else {
@@ -145,35 +146,35 @@ exports.saveApply = function (req, res) {
 
 };
 exports.showAdmin = function (req, res) {
-    console.log('showAdmin...');
+    log.info('showAdmin...');
     res.render('admin', {title: '集美大学学生活动场所申请平台', subtitle: '后台管理'})
 };
 exports.showLogin = function (req, res) {
-    console.log('showLogin...');
+    log.info('showLogin...');
     res.render('login', {title: '集美大学学生活动场所申请平台', subtitle: '登陆', msg: ''})
 };
 exports.applyNum = function (req, res) {
-    console.log('applyNum...');
+    log.info('applyNum...');
     Apply.where({isread: 0}).count(function (err, count) {
         if (err) res.end(JSON.stringify({msg: '获取未审核申请数失败！', flag: false}));
         else res.end(JSON.stringify({count: count, flag: true}));
     })
 };
 exports.print = function (req, res) {
-    console.log('print...');
+    log.info('print...');
     Apply.find({
         verify: 1,
         eventime: {$gte: Util.decrement(req.query.begin, 1), $lte: req.query.end}
-    }).populate('user','-password').exec(function (err, applies) {
+    }).populate('user', '-password').exec(function (err, applies) {
         if (err) res.render('error', {error: '获取打印信息失败！'});
         else {
             res.render('print', {applies: applies, title: '集美大学学生活动场所申请平台', subtitle: '报表'});
-            console.log(applies);
+            log.info(applies);
         }
     })
 };
 exports.addUser = function (req, res) {
-    console.log('addUser...');
+    log.info('addUser...');
     User.create({
         username: req.body.username,
         password: req.body.password,
@@ -188,14 +189,14 @@ exports.addUser = function (req, res) {
     })
 };
 exports.userList = function (req, res) {
-    console.log('userList...');
+    log.info('userList...');
     User.find({}).exec(function (err, users) {
         if (err) res.end(JSON.stringify({msg: '获取用户列表失败！', flag: false}));
         else res.end(JSON.stringify({msg: '获取用户列表成功！', flag: true, user: users}));
     })
 };
 exports.getUserInfo = function (req, res) {
-    console.log('getUserInfo...');
+    log.info('getUserInfo...');
     var _username = req.body.username;
     User.find({username: _username}).exec(function (err, user) {
         if (err) res.end(JSON.stringify({msg: '获取用户信息失败！', flag: false}));
@@ -209,7 +210,7 @@ exports.getUserInfo = function (req, res) {
 
 };
 exports.updateUser = function (req, res) {
-    console.log('updateUser...');
+    log.info('updateUser...');
     var _username = req.body.username;
     var _password = req.body.password;
     var _organize = req.body.organize;
@@ -228,14 +229,14 @@ exports.updateUser = function (req, res) {
         })
 };
 exports.resetApplies = function (req, res) {
-    console.log('resetApplies...');
+    log.info('resetApplies...');
     User.update({}, {applies: 2}, {multi: true}, function (err) {
         if (err) res.end(JSON.stringify({msg: '重置剩余申请数失败！', flag: false}));
         else res.end(JSON.stringify({msg: '重置剩余申请数成功！', flag: true}));
     })
 };
 exports.delUser = function (req, res) {
-    console.log('delUser...');
+    log.info('delUser...');
     var _username = req.query.username;
     User.remove({username: _username}, function (err) {
         if (err) res.end(JSON.stringify({msg: '删除用户失败！', flag: false}));
@@ -244,7 +245,7 @@ exports.delUser = function (req, res) {
 
 };
 exports.unCheckedApply = function (req, res) {
-    console.log('unCheckedApply...');
+    log.info('unCheckedApply...');
     Apply.find({isread: 0})
         .populate('user')
         .exec(function (err, applys) {
@@ -256,7 +257,7 @@ exports.unCheckedApply = function (req, res) {
 
 };
 exports.checkedApply = function (req, res) {
-    console.log('checkedApply...');
+    log.info('checkedApply...');
     Apply.find({isread: 1})
         .populate('user')
         .exec(function (err, applys) {
@@ -266,7 +267,7 @@ exports.checkedApply = function (req, res) {
 
 };
 exports.agreeApply = function (req, res) {
-    console.log('agreeApply...');
+    log.info('agreeApply...');
     Apply.update({_id: req.body.id}, {isread: 1, verify: 1, remark: req.body.remark}, function (err) {
         if (err) res.end(JSON.stringify({msg: '审核失败！', flag: false}));
         else res.end(JSON.stringify({msg: '审核成功！', flag: true}));
@@ -274,13 +275,13 @@ exports.agreeApply = function (req, res) {
 
 };
 exports.disagreeApply = function (req, res) {
-    console.log('disagreeApply...');
+    log.info('disagreeApply...');
     Apply.findOneAndUpdate({_id: req.body.id}, {isread: 1, verify: 0, remark: req.body.remark}, function (err, apply) {
         if (err) res.end(JSON.stringify({msg: '审核失败！', flag: false}));
         else {
             //如果申请失败 则申请者剩余申请次数加一
             User.findOne({_id: apply.user}).exec(function (err, user) {
-                if (err) console.log(err)
+                if (err) log.info(err)
                 else {
                     user.applies++;
                     user.save();
@@ -292,11 +293,11 @@ exports.disagreeApply = function (req, res) {
 
 };
 exports.timeCtrl = function (req, res) {
-    console.log('timeCtrl...');
-    console.log(req.query.earliest, req.query.latest);
+    log.info('timeCtrl...');
+    log.info(req.query.earliest, req.query.latest);
     Setting.update({}, {earliest: req.query.earliest, latest: req.query.latest}, function (err) {
         if (err) {
-            console.log(err);
+            log.info(err);
             res.end(JSON.stringify({msg: '修改失败！', flag: false}));
         }
         else res.end(JSON.stringify({msg: '修改成功！', flag: true}));
@@ -304,14 +305,14 @@ exports.timeCtrl = function (req, res) {
 
 };
 exports.openTime = function (req, res) {
-    console.log('openTime...');
+    log.info('openTime...');
     Setting.findOne({}, function (err, setting) {
         if (err) res.end(JSON.stringify({msg: '获取活动地址失败！', flag: false}));
         else res.end(JSON.stringify({msg: '获取活动地址成功！', flag: true, setting: setting}));
     })
 };
 exports.openPlace = function (req, res) {
-    console.log('openPlace...');
+    log.info('openPlace...');
     Setting.findOne({}, function (err, setting) {
         if (err) res.end(JSON.stringify({msg: '获取活动地址失败！', flag: false}));
         else res.end(JSON.stringify({msg: '获取活动地址成功！', flag: true, setting: setting}));
@@ -319,8 +320,8 @@ exports.openPlace = function (req, res) {
 
 };
 exports.savePlace = function (req, res) {
-    console.log('savePlace...');
-    console.log(req.query.saveplace)
+    log.info('savePlace...');
+    log.info(req.query.saveplace)
     Setting.findOne({}, function (err, setting) {
         if (err) res.end(JSON.stringify({msg: '活动场所添加失败' + msg, flag: false}));
         else {
@@ -333,8 +334,8 @@ exports.savePlace = function (req, res) {
 
 };
 exports.delPlace = function (req, res) {
-    console.log('savePlace...');
-    console.log(req.query.delplace)
+    log.info('savePlace...');
+    log.info(req.query.delplace)
     Setting.findOne({}, function (err, setting) {
         if (err) res.end(JSON.stringify({msg: '活动场所删除失败' + msg, flag: false}));
         else {
@@ -359,7 +360,7 @@ exports.signinRequired = function (req, res, next) {
 
 exports.adminRequired = function (req, res, next) {
     var user = req.session.user;
-    console.log(user);
+    log.info(user);
     if (!user) {
         return res.redirect('/login')
     }
