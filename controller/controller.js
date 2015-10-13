@@ -154,7 +154,7 @@ exports.showLogin = function (req, res) {
 };
 exports.applyNum = function (req, res) {
     console.log('applyNum...');
-    Apply.where({verify: 0, eventime: {$gte: Util.timeNow()}}).count(function (err, count) {
+    Apply.where({isread: 0}).count(function (err, count) {
         if (err) res.end(JSON.stringify({msg: '获取未审核申请数失败！', flag: false}));
         else res.end(JSON.stringify({count: count, flag: true}));
     })
