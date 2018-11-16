@@ -16,7 +16,7 @@
     "express-session": "^1.11.3",
     "log4js": "^0.6.27",
     "moment": "^2.10.6",
-    "morgan": "~1.6.1",
+    "morgan": "~1.9.1",
     "node-compass": "0.2.3",
     "sass": "^0.5.0",
     "serve-favicon": "~2.3.0"
