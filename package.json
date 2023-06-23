@@ -14,7 +14,7 @@
     "ejs-mate": "^2.3.0",
     "express": "~4.13.1",
     "express-session": "^1.11.3",
-    "log4js": "^0.6.27",
+    "log4js": "^3.0.0",
     "moment": "^2.10.6",
     "morgan": "~1.6.1",
     "node-compass": "0.2.3",
